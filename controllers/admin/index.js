@@ -3,42 +3,6 @@ const router = Router();
 const ctrl = require("./admin.ctrl");
 
 router.get("/contacts", ctrl.get_contacts);
-/*
-
-  try{
-    const shops = await models.Shops.findAll({
-
-      ...( req.query.lat && req.query.lng ?
-
-      {
-        attributes: {
-
-          include : [
-            [
-              models.sequelize.literal(`
-                ST_DISTANCE_SPHERE( POINT(
-                    ${req.query.lng},
-                    ${req.query.lat}
-                  ), geo)`
-                ) ,
-                'distance'
-            ]
-          ]
-
-
-        },
-
-        order  : [ [ models.sequelize.literal('distance'), 'asc' ] ]
-
-      }
-
-      : '')
-    });
-    res.render('home.html', { shops });
-  }catch(e){
-    console.log(e);
-  }
-*/
 
 router.get("/contacts/write", ctrl.get_contacts_write);
 
