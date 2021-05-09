@@ -19,7 +19,8 @@ module.exports = function (sequelize, DataTypes) {
     name: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING, comment: "주소" },
     price: { type: DataTypes.INTEGER },
-    description: { type: DataTypes.TEXT }
+    description: { type: DataTypes.TEXT },
+    geo: { type: DataTypes.GEOMETRY('POINT'), comment: '위도,경도'},
   });
 
   Contacts.associate = (models) => {

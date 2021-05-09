@@ -20,6 +20,9 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
+    return queryInterface.addColumn('Contacts', 'geo',
+        { type: Sequelize.DataTypes.GEOMETRY( 'Point')
+        })
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -29,5 +32,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
+    return queryInterface.removeColumn( 'Contacts', 'geo' )
   }
 };
