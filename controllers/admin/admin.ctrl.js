@@ -23,6 +23,15 @@ exports.get_contacts_write = (_, res) => {
 exports.post_contacts_write = async (req, res) => {
   try {
     // 여기작성
+    req.body.geo = {
+      type: 'Point',
+      coordinates: [
+        // 경도
+        req.body.geo.split(',')[0] ,
+        // 위도
+        req.body.geo.split(',')[1]
+      ]
+    };
 
     await models.Contacts.create(req.body);
     res.redirect("/admin/contacts");
@@ -52,7 +61,13 @@ exports.get_contacts_edit = async (req, res) => {
 exports.post_contacts_edit = async (req, res) => {
   try {
     // 여기 작성
-
+    req.body.geo = {
+      type: 'Point',
+      coordinates: [
+        req.body.geo.split(',')[0] ,
+        req.body.geo.split(',')[1]
+      ]
+    };
     await models.Contacts.update(req.body, {
       where: { id: req.params.id }
     });

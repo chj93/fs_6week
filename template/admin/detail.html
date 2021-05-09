@@ -1,5 +1,34 @@
 {% set title = "관리자 : 상세페이지" %} {% extends "layout/base.html" %} {%
 block content -%}
+<script
+    type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ map_api.KAKAO_JAVASCRIPT_KEY  }}&libraries=services"
+></script>
+<script src="/static/js/kakaomap.js"></script>
+<script>
+  {% if contact.address and contact.geo  %}
+  var lat = {{contact.geo.coordinates[1]}};
+  var lng = {{contact.geo.coordinates[0]}};
+
+  var mapContainer = new kakao.maps.Map(
+      document.getElementById("map_area"),
+      {
+        center: new kakao.maps.LatLng( lat, lng), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+      }
+  );
+  $('#map_area').css('height','350px');
+  mapSearchByAddess(
+      mapContainer ,
+      '#map_area',
+      'input[name=geo]' ,
+      $('input[name=name]') ,
+      $('input[name=address]')
+  );
+  {% endif %}
+
+</script>
+
 <div class="panel panel-default">
   <div class="panel-heading">
     {{ contact.name }}
@@ -10,7 +39,16 @@ block content -%}
     </div>
     {{ contact.description }}
     <hr />
-
+    {% if contact.address and contact.geo  %}
+    <div
+        id="map_area"
+        style="
+            width: 100%;
+            height: 350px;
+            margin: 10px 0 50px 0;
+          "
+    ></div>
+    {% endif %}
     <ul>
       <li>
         메모템플릿 (
