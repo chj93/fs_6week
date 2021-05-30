@@ -69,3 +69,80 @@ exports.delete_posts = async (req, res) => {
     });
   }
 };
+
+exports.posts_write_tag = async (req, res) => {
+  try {
+    const tag = await models.Tag.findOrCreate({
+      where: {
+        name : req.body.name
+      }
+    });
+
+    const posts = await models.Posts.findByPk(req.body.post_id);
+    const status = await posts.addTag(tag[0]);
+
+    res.json({
+      status : status
+    })
+
+  } catch (e) {
+    res.json(e)
+  }
+}
+
+exports.posts_delete_tag = async (req, res) => {
+  try {
+    const posts = await models.Posts.findByPk(req.params.post_id);
+    const tag = await models.Tag.findByPk(req.params.tag_id);
+
+    const result = await posts.removeTag(tag);
+
+    res.json({
+      result : result
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+exports.get_search = async (req, res) => {
+  try {
+    const posts = await models.Posts.findAll({
+
+      include : [ 'Tag' ],
+
+      where : {
+        ...(
+            //posts title
+            //tag name
+
+            // 검색어가 있는 경우
+            ('name' in req.query && req.query.name) ?
+                {
+                  // + 태그에서 가져옴 or
+                  [models.Sequelize.Op.or] : [
+                    models.Sequelize.where( models.Sequelize.col('Tag.name') , {
+                      [models.Sequelize.Op.like] : `%${req.query.name}%`
+                    }),
+                    {
+                      'title' : {
+                        [models.Sequelize.Op.like] : `%${req.query.name}%`
+                      }
+                    }
+                  ],
+                }
+                :
+                '' )
+      }
+
+
+    });
+
+    res.json({
+      posts
+    })
+
+
+  } catch (e) {
+    console.log(e);
+  }
+}
